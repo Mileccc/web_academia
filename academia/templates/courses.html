@@ -1,0 +1,32 @@
+{% extends 'base.html' %}
+
+{% block content %}
+    <div class="container my-4">
+        <h2>Nuestros Cursos</h2>
+        {% if group_name == 'administrativos' %}
+            <a class="btn btn-secondary" href="">Agregar Curso</a>
+        {% endif %}
+    
+
+        <!-- Sección de mensajes -->
+
+
+        <div class="row row-cols-1 row-cols-md-2 g-4 my-4">
+            <div class="col">
+                <div class="card">
+                    <div class="card-body">
+                        <h5 class="card-title">Nombre del curso</h5>
+                        <p class="card-text">Descripción del curso</p>
+                        <p class="card-text"><strong>Profesor: </strong>Nombre del profesor</p>
+                        <p class="card-text"><strong>Cantidad de clases: </strong>XX clase</p>
+                        <p class="card-text"><strong>Cantidad de inscritos: </strong>YY</p>
+                        <a class="btn btn-sm btn-success" href="">Anotarse</a>
+                        <a class="btn btn-sm btn-warning" href="">Editar</a>
+                        <a class="btn btn-sm btn-danger" href="">Eliminar</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+{% endblock %}
