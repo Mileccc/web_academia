@@ -74,3 +74,56 @@ ___
    <img src="readme_img/admin.png" alt="imagen" style="width: 70%;">
 </div>
 
+___
+
+10. Opciones distintas por grupos
+
+   - Alumno: Anotarse y Perfil
+
+<div style="display:flex; justify-content:center; align-items:center;">
+   <img src="readme_img/opciones_cursos.png" alt="imagen" style="width: 70%;">
+</div>
+
+
+   - Administrativo: Editar y Eliminar
+
+
+<div style="display:flex; justify-content:center; align-items:center;">
+   <img src="readme_img/opciones_cursos_admin.png" alt="imagen" style="width: 70%;">
+</div>
+
+   - Profesor: Nada
+
+<div style="display:flex; justify-content:center; align-items:center;">
+   <img src="readme_img/opciones_cursos_profesor.png" alt="imagen" style="width: 70%;">
+</div>
+
+___
+
+11. Botones agregar y Editar Cursos
+
+<div style="display:flex; justify-content:center; align-items:center;">
+   <img src="readme_img/agregar_curso.png" alt="imagen" style="width: 70%;">
+</div>
+
+<div style="display:flex; justify-content:center; align-items:center;">
+   <img src="readme_img/editar_cursos.png" alt="imagen" style="width: 70%;">
+</div>
+
+___
+
+12. Registro de cursos en el perfil de profesores
+
+<div style="display:flex; justify-content:center; align-items:center;">
+   <img src="readme_img/perfil_profe_registros.png" alt="imagen" style="width: 70%;">
+</div>
+
+___
+
+13. Modificación de Notas
+
+<div style="display:flex; justify-content:center; align-items:center;">
+   <img src="readme_img/ajustes_notas.png" alt="imagen" style="width: 70%;">
+</div>
+
+___

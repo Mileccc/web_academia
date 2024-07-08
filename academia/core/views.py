@@ -235,7 +235,7 @@ class CourseCreateView(UserPassesTestMixin, CreateView):
 class CourseEditView(UserPassesTestMixin, UpdateView):
     model = Course
     form_class = CourseForm
-    template_name = 'create_course.html'
+    template_name = 'edit_course.html'
     success_url = reverse_lazy('courses')
     
     def test_func(self):
