@@ -3,12 +3,19 @@ from django.contrib.auth.models import User
 from django.db.models.signals import post_save, post_delete
 from django.dispatch import receiver
 
-# CURSOS
+# CURSOS: ESTADS POSIBLES(STATUS) : EN ETAPA DE INSCRIPCION - EN DESARROLLO - FINALIZADO
 class Course(models.Model):
+    STATUS_CHOICES = [
+        ('I', 'En etapa de inscripción'),
+        ('P', 'En progreso'),
+        ('F', 'Finalizado'),
+    ]
+    
     name = models.CharField(max_length=90, verbose_name='Nombre')
     description = models.TextField(blank=True, null=True, verbose_name='Descripción')
     teacher = models.ForeignKey(User, on_delete=models.CASCADE, limit_choices_to={'groups__name': 'profesores'}, verbose_name='Profesor')
     class_quantity = models.PositiveIntegerField(default=0, verbose_name='Cantidad de clases')
+    status = models.CharField(max_length=1, choices=STATUS_CHOICES, default='I', verbose_name='Estado')
 
     def __str__(self):
         return self.name

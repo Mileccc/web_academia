@@ -1,0 +1,47 @@
+{% extends 'base.html' %}
+
+{% block content %}
+    {% load crispy_forms_tags %}
+    <div class="container my-4">
+        <h2>Eliminar Curso</h2>
+    
+
+
+        <form action="" method="POST">
+            {% csrf_token %}
+            <div class="card w-50 mx-auto my-5">
+                <div class="card-body">
+                    <h5 class="card-title">Proceso de eliminación</h5>
+                    <p>Estas seguro que deseas eliminar el curso <strong>{{ course.name }}?</strong></p>
+                    <div class="float-end">
+                        <a type="button" href="" class="btn btn-danger mt-auto" data-bs-toggle="modal" data-bs-target="#deleteModal" >Eliminar</a>
+                        <a href="{% url 'courses' %}" class="btn btn-secondary mt-auto">Cancelar</a>
+                    </div>
+
+                </div>
+            </div>
+
+            <!-- MODAL PARA CONFIRMAR LA ELIMINACIÓN DEL REGISTRO -->
+            <div class="modal fade" id="deleteModal" tabindex="-1" aria-labelledby="deleteModalLabel" aria-hidden="true">
+                <div class="modal-dialog">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title" id="deleteModalLabel">Confirmar la eliminación</h5>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                        </div>
+                        <div class="modal-body">
+                            <p>¿Estas seguro de eliminar el registro?</p>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                            <button type="submit" class="btn btn-danger">Confirmar</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </form>
+
+    </div>
+
+{% endblock %}

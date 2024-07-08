@@ -1,0 +1,32 @@
+{% extends 'base.html' %}
+
+{% block content %}
+    <div class="container mt-3 text-center">
+        <h2 class="mb-4">Listado de Alumnos - <strong>{{ course }}</strong></h2>
+
+        <table class="table">
+            <thead>
+                <tr>
+                    <th scope="col">Alumno</th>
+                    <th scope="col">Evaluación 1</th>
+                    <th scope="col">Evaluación 2</th>
+                    <th scope="col">Evaluación 3</th>
+                    <th scope="col">Promedio</th>
+                    <th scope="col">Acciones</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for data in student_data %}
+                    <tr>
+                        <th scope="row">{{ data.name }}</th>
+                        <td>{{ data.mark_1 }}</td>
+                        <td>{{ data.mark_2 }}</td>
+                        <td>{{ data.mark_3 }}</td>
+                        <td><strong>{{ data.average }}</strong></td>
+                        <td><a href="" class="btn btn-sm btn-primary">Agregar Nota</a></td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+{% endblock %}

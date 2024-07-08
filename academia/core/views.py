@@ -1,13 +1,20 @@
+import os
 from typing import Any
-from django.shortcuts import render, redirect
+from django.contrib import messages
+from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth import authenticate, login
-from django.views.generic import TemplateView
-from django.contrib.auth.models import Group
+from django.urls import reverse_lazy
+from django.views.generic import TemplateView, CreateView, UpdateView, DeleteView
+from django.contrib.auth.models import Group, User
 from django.views import View
 from django.utils.decorators import method_decorator
+from django.contrib.auth.mixins import UserPassesTestMixin
 
-from .forms import RegisterForm, UserForm, ProfileForm
-from .models import Course
+from django.conf import settings
+
+from .forms import RegisterForm, UserForm, ProfileForm, CourseForm
+from .models import Course, Mark, Registration
+
 
 
 
@@ -142,6 +149,11 @@ class ProfileView(TemplateView):
         context['user_form'] = UserForm(instance=user)
         context['profile_form'] = ProfileForm(instance=user.profile)
         
+        if user.groups.first().name == 'profesores':
+            # Obtener todos los cursos asignados al profesor
+            assigned_courses = Course.objects.filter(teacher=user)
+            context['assigned_courses'] = assigned_courses
+        
         return context
     
     def post(self, request, *args, **kwargs):
@@ -167,7 +179,145 @@ class CoursesView(TemplateView):
     
     def get_context_data(self, **kwargs):
         context =  super().get_context_data(**kwargs)
-        courses = Course.objects.all()
+        courses = Course.objects.all().order_by('-id')
+        student = self.request.user if self.request.user.is_authenticated else None
+        for item in courses:
+            if student:
+                registration = Registration.objects.filter(course=item, student=student).first()
+                item.is_enrolled = registration is not None
+            else:
+                item.is_enrolled = False
+            
+            enrollment_count = Registration.objects.filter(course=item).count()
+            item.enrollment_count = enrollment_count
+        
         
         context['courses'] = courses
+        return context
+
+@add_group_name_to_context
+class ErrorView(TemplateView):
+    template_name = 'error.html'
+    
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        error_image_path = os.path.join(settings.MEDIA_URL, 'error.png')
+        context['error_image_path'] = error_image_path
+        return context
+    
+
+  
+# CREAR UN NUEVO CURSO
+@add_group_name_to_context
+class CourseCreateView(UserPassesTestMixin, CreateView):
+    model = Course
+    form_class = CourseForm
+    template_name = 'create_course.html'
+    success_url = reverse_lazy('courses')
+    
+    def test_func(self):
+        return self.request.user.groups.filter(name='administrativos').exists()
+    
+    def handle_no_permission(self):
+        return redirect('error')
+    
+    def form_valid(self, form):
+        messages.success(self.request, 'Curso creado con exito')
+        return super().form_valid(form)
+    
+    def form_invalid(self, form):
+        messages.error(self.request, 'Error al crear el curso')
+        return self.render_to_response(self.get_context_data(form=form))
+    
+
+# EDITAR UN CURSO
+@add_group_name_to_context
+class CourseEditView(UserPassesTestMixin, UpdateView):
+    model = Course
+    form_class = CourseForm
+    template_name = 'create_course.html'
+    success_url = reverse_lazy('courses')
+    
+    def test_func(self):
+        return self.request.user.groups.filter(name='administrativos').exists()
+    
+    def handle_no_permission(self):
+        return redirect('error')
+    
+    def form_valid(self, form):
+        form.save()
+        messages.success(self.request, 'El registro se ha actualizado satisfactoriamente')
+        return redirect(self.success_url)
+    
+    def form_invalid(self, form):
+        messages.error(self.request, 'Ha ocurrido un error al actualizar el registro')
+        return self.render_to_response(self.get_context_data(form=form))
+    
+    
+@add_group_name_to_context
+class CourseDeleteView(UserPassesTestMixin, DeleteView):
+    model = Course
+    template_name = 'delete_course.html'
+    success_url = reverse_lazy('courses')
+    
+    def test_func(self):
+        return self.request.user.groups.filter(name='administrativos').exists()
+    
+    def handle_no_permission(self):
+        return redirect('error')
+    
+    def form_valid(self, form):
+        messages.success(self.request, 'El registro se ha eliminado satisfactoriamente')
+        return super().form_valid(form)
+    
+    def form_invalid(self, form):
+        messages.error(self.request, 'Ha ocurrido un error al eliminar el registro')
+        
+        
+#   REGISTRO DE UN USUARIO EN UN CURSO
+@add_group_name_to_context
+class CoursEnrollmentView(TemplateView):
+    def get(self, request, course_id):
+        course = get_object_or_404(Course, pk=course_id)
+        
+        if request.user.is_authenticated and request.user.groups.first().name == 'estudiantes': 
+            student = request.user
+            
+            # Crear un registro de inscripción asociado al estudiante y al curso
+            registration = Registration.objects.create(student=student, course=course)
+            registration.save()
+
+            messages.success(request, 'Te has inscrito satisfactoriamente')
+        else:
+            messages.error(request, 'No se pudo completar la inscripción')
+        
+        return redirect('courses')
+
+# MOSTRAR LISTA DE ALUMNOS Y NOTAS A LOS PROFESORES
+@add_group_name_to_context
+class StudentListMarkView(TemplateView):
+    template_name = 'student_list_mark.html'
+    
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        course_id = self.kwargs['course_id']
+        course = get_object_or_404(Course, pk=course_id)
+        marks = Mark.objects.filter(course=course)
+        
+        student_data = []
+        
+        for mark in marks:
+            student = get_object_or_404(User, pk=mark.student.id)
+            student_data.append({
+                'mark_id': mark.id,
+                'name': student.get_full_name(),
+                'mark_1': mark.mark_1,
+                'mark_2': mark.mark_2,
+                'mark_3': mark.mark_3,
+                'average': mark.average
+            })
+        
+        context['course'] = course
+        
+        context['student_data'] = student_data
         return context
