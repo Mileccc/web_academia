@@ -3,6 +3,13 @@
 {% block content %}
     <div class="container mt-3 text-center">
         <h2 class="mb-4">Listado de Alumnos - <strong>{{ course }}</strong></h2>
+        {% if course.status == 'I' %}
+            <h5 class="mb-4"><span class="badge bg-success">EN ETAPA DE INSCRIPCIÓN</span></h5>
+        {% elif course.status == 'P' %}
+            <h5 class="mb-4"><span class="badge bg-warning text-dark">EN PROGRESO</span></h5>
+        {% elif course.status == 'F' %}
+            <h5 class="mb-4"><span class="badge bg-danger">FINALIZADO</span></h5>  
+        {% endif %}  
 
         <table class="table">
             <thead>
@@ -23,7 +30,9 @@
                         <td>{{ data.mark_2 }}</td>
                         <td>{{ data.mark_3 }}</td>
                         <td><strong>{{ data.average }}</strong></td>
-                        <td><a href="" class="btn btn-sm btn-primary">Agregar Nota</a></td>
+                        <td>
+                            <a href="{% url 'update_mark' data.mark_id %}" class="btn btn-sm btn-primary {% if course.status == 'I' or course.status == 'F' %}disabled{% endif %}">Agregar Nota</a>
+                        </td>
                     </tr>
                 {% endfor %}
             </tbody>

@@ -33,22 +33,16 @@
             </div>
 
             <div class="col-md-8">
-                {% comment %} CARD VARIABLE {% endcomment %}
-                <div class="card border rounded-2 shadow p-3 mb-3">
-                    <div class="card-body">
-                        {% comment %} Evaluar grupo al que pertene el usuario {% endcomment %}
-                        {% if group_name == 'estudiantes' %}
-                            {% include "profile/students.html" %}
-                        {% elif group_name == 'profesores'  %}
-                            {% include "profile/profesor.html"  %}
-                        {% elif group_name  == 'preceptores'   %}
-                            {% include   "profile/preceptor.html"   %}
-                        {% elif group_name == 'administrativos'  %}
-                            {% include  "profile/admin.html"  %}
-                        {% endif  %}
-                        
-                    </div>
-                </div>
+                {% comment %} Evaluar grupo al que pertene el usuario {% endcomment %}
+                {% if group_name == 'estudiantes' %}
+                    {% include "profile/students.html" %}
+                {% elif group_name == 'profesores'  %}
+                    {% include "profile/profesor.html"  %}
+                {% elif group_name  == 'preceptores'   %}
+                    {% include   "profile/preceptor.html"   %}
+                {% elif group_name == 'administrativos'  %}
+                    {% include  "profile/admin.html"  %}
+                {% endif  %}
             </div>
         </div>
     </div>

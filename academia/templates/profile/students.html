@@ -1,3 +1,21 @@
 <div>
-    <h6>{{ group_name_singular | capfirst}}</h6>
+    <h5>CURSOS EN LOS QUE ESTÁS INSCRITOS</h5>
+    {% if enrolled_courses %}
+        <ul class="list-group">
+            {% for course in enrolled_courses %}
+            {% with enrollment_count=course.registration_set.count %}
+                <li class="list-group-item">
+                    {{ course.name }}
+                    <a href="" class="btn btn-sm btn-warning float-end">
+                        Consultar Evolución
+                    </a>
+                </li>
+            {% endwith %}
+            {% endfor %}
+        </ul>
+    {% else %}
+        <div class="alert alert-primary" role="alert">
+            Ud. no está inscrito en ningún curso.
+        </div>
+    {% endif %}
 </div>

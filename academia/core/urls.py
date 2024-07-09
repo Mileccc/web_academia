@@ -1,5 +1,5 @@
 from django.urls import path
-from .views import ErrorView, HomeView, PricingView, RegisterView, ProfileView, CoursesView, CourseCreateView, CourseEditView,CourseDeleteView,CoursEnrollmentView, StudentListMarkView
+from .views import ErrorView, HomeView, PricingView, RegisterView, ProfileView, CoursesView, CourseCreateView, CourseEditView,CourseDeleteView,CoursEnrollmentView, StudentListMarkView, UpdateMarkView
 from django.contrib.auth.decorators import login_required
 
 urlpatterns = [
@@ -21,6 +21,7 @@ urlpatterns = [
     path("enroll_course/<int:course_id>/", login_required(CoursEnrollmentView.as_view()), name="enroll_course"),
     # PROFESOR AÑADIR NOTAS
     path("courses/<int:course_id>", login_required(StudentListMarkView.as_view()), name="student_list_mark"),
+    path('courses/update_mark/<int:mark_id>/', login_required(UpdateMarkView.as_view()), name="update_mark"),
     
     
 ]

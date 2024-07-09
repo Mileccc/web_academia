@@ -1,3 +1,82 @@
 <div>
-    <h6>{{ group_name_singular | capfirst}}</h6>
+    <h5>TODOS LOS CURSOS</h5>
+    <div class="card text-bg-warning shadow mt-3 mb-3">
+        <div class="card-header">CURSOS EN PROGRESO</div>
+        <div class="card-body">
+            {% if progress_courses %}
+                <ul class="list-group">
+                    {% for course in progress_courses %}
+                        {% with enrollment_count=course.registration_set.count %}
+                            <li class="list-group-item list-group-item-warning">
+                                {{ course.name }}
+                                <a href="" class="btn btn-sm btn-warning float-end">
+                                    Asistencias
+                                    <span class="badge rounded-pill bg-light text-danger">{{ enrollment_count }}</span>
+                                </a>
+                            </li>
+                        {% endwith %}
+                    {% endfor %}
+                </ul>
+            {% else %}
+            <div class="alert alert-warning" role="alert">
+                    No hay cursos en progreso hasta el momento
+                </div>
+            {% endif %}
+        </div>
+    </div>
+
+    <div class="card text-bg-success shadow mb-3">
+        <div class="card-header">CURSO EN ETAPA DE INSCRIPCIÓN</div>
+        <div class="card-body">
+            {% if inscription_courses %}
+                <ul class="list-group">
+                    {% for course in inscription_courses %}
+                        {% with enrollment_count=course.registration_set.count %}   
+                        <li class="list-group-item list-group-item-success">
+                            {{ course.name }}
+                            <a href="" class="btn btn-sm btn-success float-end">
+                                {% if course.status == 'I' %}
+                                    Consultar listado
+                                {% endif %}
+                                <span class="badge rounded-pill bg-light text-danger">{{ enrollment_count }}</span>
+                            </a>
+                        </li>
+                        {% endwith %}
+                    {% endfor %}
+                </ul>
+            {% else %}
+                <div>
+                    No hay inscripciones en este curso hasta el momento
+                </div>
+            {% endif %}
+        </div>
+    </div>
+
+    <div class="card text-bg-danger shadow mb-3">
+        <div class="card-header">CURSOS FINALIZADOS</div>
+        <div class="card-body">
+            {% if finalized_courses %}
+                <ul class="list-group">
+                    {% for course in finalized_courses %}
+                        {% with enrollment_count=course.registration_set.count %}   
+                        <li class="list-group-item list-group-item-danger">
+                            {{ course.name }}
+                            <a href="{% url 'student_list_mark' course.id %}" class="btn btn-sm btn-danger float-end">
+                                {% if course.status == 'F' %}
+                                    Consultar listado
+                                {% endif %}
+                                <span class="badge rounded-pill bg-light text-danger">{{ enrollment_count }}</span>
+                            </a>
+                        </li>
+                        {% endwith %}
+                    {% endfor %}
+                </ul>
+            {% else %}
+                <div class="alert alert-danger" role="alert">
+                    No tiene Cursos finalizados asignados hasta el momento
+                </div>
+            {% endif %}
+        </div>
+    </div>
+
 </div>

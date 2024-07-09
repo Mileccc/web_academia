@@ -83,6 +83,7 @@ class Mark(models.Model):
     def __str__(self):
         return f'Asistencia {self.id}'
     
+    # Calcular el promedio
     def calculate_average(self):
         marks = [self.mark_1, self.mark_2, self.mark_3]
         valid_marks = [mark for mark in marks if mark is not None]

@@ -151,8 +151,30 @@ class ProfileView(TemplateView):
         
         if user.groups.first().name == 'profesores':
             # Obtener todos los cursos asignados al profesor
-            assigned_courses = Course.objects.filter(teacher=user)
+            assigned_courses = Course.objects.filter(teacher=user).order_by('-id')
+            inscription_courses = assigned_courses.filter(status='I')
+            progress_courses = assigned_courses.filter(status='P')
+            finalized_courses = assigned_courses.filter(status='F')
+            context['inscription_courses'] = inscription_courses
+            context['progress_courses'] = progress_courses
+            context['finalized_courses'] = finalized_courses
             context['assigned_courses'] = assigned_courses
+        
+        elif user.groups.first().name == 'estudiantes':
+            # Obtener todas las inscripciones del estudiante
+            registrations = Registration.objects.filter(student=user)
+            context['enrolled_courses'] = [registration.course for registration in registrations]
+            
+        elif user.groups.first().name == 'preceptores':
+            # Obtener todos los cursos existentes
+            all_courses = Course.objects.all().order_by('-id')
+            inscription_courses = all_courses.filter(status='I')
+            progress_courses = all_courses.filter(status='P')
+            finalized_courses = all_courses.filter(status='F')
+            context['inscription_courses'] = inscription_courses
+            context['progress_courses'] = progress_courses
+            context['finalized_courses'] = finalized_courses
+            context['all_courses'] = all_courses
         
         return context
     
@@ -321,3 +343,29 @@ class StudentListMarkView(TemplateView):
         
         context['student_data'] = student_data
         return context
+    
+# ACTUALIZAR NOTAS DE ALUMNOS
+@add_group_name_to_context
+class UpdateMarkView(UpdateView):
+    model = Mark
+    fields = ['mark_1', 'mark_2', 'mark_3']
+    template_name = 'update_mark.html'
+    
+    def get_success_url(self):
+        return reverse_lazy('student_list_mark', kwargs={'course_id': self.object.course.id})
+    
+    
+    def form_valid(self, form):
+        response = super().form_valid(form)
+        return redirect(self.get_success_url())
+
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        mark = self.get_object()
+        context['course_name'] = mark.course.name
+        return context
+    
+    def get_object(self, queryset=None):
+        mark_id = self.kwargs['mark_id']
+        return get_object_or_404(Mark, id=mark_id)

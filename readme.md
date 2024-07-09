@@ -127,3 +127,17 @@ ___
 </div>
 
 ___
+
+14. Funcionalidad botón a Agregar Nota
+
+<div style="display:flex; justify-content:center; align-items:center;">
+   <img src="readme_img/agregar_nota.png" alt="imagen" style="width: 70%;">
+</div>
+
+___
+
+15. Estados y separacion de cursos
+
+<div style="display:flex; justify-content:center; align-items:center;">
+   <img src="readme_img/estados_cursos.png" alt="imagen" style="width: 70%;">
+</div>
